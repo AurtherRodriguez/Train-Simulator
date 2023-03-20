@@ -49,25 +49,33 @@ public class TrainController : MonoBehaviour
 
     void Update()
     {
-        throttleInput = Input.GetAxis("Throttle") * acceleration;
-        brakeInput = Input.GetAxis("Brake") * braking;
-        if (wheelacce == 0)
+        brakeInput = Input.GetAxis("Brake");
+        
+        if (brakeInput > 0)
+        {
+            brakeInput = Input.GetAxis("Brake") * braking;
+        }
+        else if (wheelacce <= 0 && brakeInput <= 0)
         {
             brakeInput = 20;
         }
+        throttleInput = Input.GetAxis("Throttle") * acceleration;
+        
+
+        
         wheelacce = throttleInput;
         wheelbrake = brakeInput;
         foreach (Wheel wheel in wheels) 
         {
             if (wheel.Accelerate)
             {
-                wheel.LEFT.motorTorque = throttleInput;
-                wheel.RIGHT.motorTorque = throttleInput;
+                wheel.LEFT.motorTorque = wheelacce;
+                wheel.RIGHT.motorTorque = wheelacce;
             }
             if (wheel.Brake)
             {
-                wheel.LEFT.brakeTorque = brakeInput;
-                wheel.RIGHT.brakeTorque = brakeInput;
+                wheel.LEFT.brakeTorque = wheelbrake;
+                wheel.RIGHT.brakeTorque = wheelbrake;
             }
         }
     }
